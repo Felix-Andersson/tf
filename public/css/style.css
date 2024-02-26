@@ -1,9 +1,16 @@
-* {
-    background-color:rgb(177, 3, 3);
+body {
+    background-color:rgb(170, 0, 0);
 }
 h1 {
     color: aliceblue;
 }
 p {
     color: white;
+}
+nav {
+    background-color: rgb(110, 0, 0);
+    justify-content: space-around;
+}
+a {
+    font-size: 2rem;
 }

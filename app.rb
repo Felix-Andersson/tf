@@ -7,13 +7,18 @@ require_relative './model.rb'
 
 enable :sessions
 
+#Skriv ut datum genom att:
+#time = Time.new
+#puts "#{time.year}-#{time.month}-#{time.day}"
+#och sätt sedan in det i date i databasen på comment
+
 #db = connect_database()
 #@result = db.execute("SELECT * FROM element")
 
-before() do
-    if (session[:id] == nil) && (request.path_info == '/protected/*')
+before('/protected/*') do
+    if (session[:id] == nil)
         #Användare har inte loggat in och försöker nå en sida förutom '/' och '/showregister'
-        print("REDIRECTED TO LOGIN BECAUSE IT IS PROTECTED!! Here is path: #{request.path_info} : end of path")
+        print("REDIRECTED TO LOGIN BECAUSE IT IS PROTECTED!! Here is path: #{request.path_info} -------")
         redirect('/')
     end
 end
@@ -30,12 +35,12 @@ post('/login') do
     password_digest = result["password"]
     id = result["id"]
 
-    if BCrypt::Password.new(pwdigest) == password
+    if BCrypt::Password.new(password_digest) == password
         session[:id] = id
         session[:username] = username
-        redirect('/showregister') #Här redirectar vi 
+        redirect('/protected/home') #Här redirectar vi 
     else
-        "Wrong details entered."
+        "Wrong details entered." #skrivs ut på skärmen
     end
 end
 
@@ -56,3 +61,17 @@ post('/register') do
     redirect('/')
 end
 
+get('/logout') do
+    session.clear
+    redirect('/showregister')
+end
+
+get('/protected/home') do
+    slim(:home)
+end
+
+get('/protected/elements') do
+    db = connect_database()
+    @result = db.execute("SELECT * FROM element")
+    slim(:elements)
+end

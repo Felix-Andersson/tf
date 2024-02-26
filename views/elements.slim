@@ -1,0 +1,10 @@
+nav
+  a href="/protected/home" Home
+  a href="/protected/elements" Elements
+  a href="/logout" Logout
+hr
+br
+
+h1 These are all the elements 
+-@result.each do |element|
+    h1 #{element["property"]}
