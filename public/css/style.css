@@ -8,9 +8,19 @@ p {
     color: white;
 }
 nav {
-    background-color: rgb(110, 0, 0);
     justify-content: space-around;
+    align-items: center;
 }
 a {
     font-size: 2rem;
+}
+.notice {
+    background:rgba(110, 10, 10, 0.2);
+    width:60vw;
+    padding:50px;
+    position:fixed;
+    top: 30%;
+    left: calc(50% - 30vw);
+    align-items: center;
+    font-size:4rem;
 }

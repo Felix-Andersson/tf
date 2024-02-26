@@ -1,7 +1,8 @@
 require 'slim'
 require 'sinatra'
-require 'bcrypt'
 require 'sinatra/reloader'
+require 'sinatra/flash'
+require 'bcrypt'
 require 'sqlite3'
 require_relative './model.rb'
 
@@ -38,6 +39,7 @@ post('/login') do
     if BCrypt::Password.new(password_digest) == password
         session[:id] = id
         session[:username] = username
+        flash[:notice] = "You have succesfully logged in!"
         redirect('/protected/home') #Här redirectar vi 
     else
         "Wrong details entered." #skrivs ut på skärmen
@@ -62,6 +64,7 @@ post('/register') do
 end
 
 get('/logout') do
+    flash[:notice] = "You have been logged out!"
     session.clear
     redirect('/showregister')
 end

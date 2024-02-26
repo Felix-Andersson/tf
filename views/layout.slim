@@ -6,4 +6,8 @@ html lang="en"
         link rel="stylesheet" href="/css/style.css?ver=321"/
         title Lakkupipu
     body
+        - if flash[:notice]
+           p.notice = flash[:notice]
         ==yield
+
+        script src="js/script.js"
