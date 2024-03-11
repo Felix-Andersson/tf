@@ -1,0 +1,9 @@
+== slim(:navbar)
+a href="/protected/gods/new" New god page
+hr
+
+h1 These are all the gods 
+ol
+    -@result.each do |god|
+        li
+            a href="/protected/gods/#{god['id']}" #{god["name"]}

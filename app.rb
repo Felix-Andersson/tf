@@ -78,3 +78,32 @@ get('/protected/elements') do
     @result = db.execute("SELECT * FROM element")
     slim(:elements)
 end
+
+get('/protected/gods') do
+    db = connect_database()
+    @result = db.execute("SELECT * FROM god")
+    slim(:'gods/index')
+end
+
+get('/protected/gods/new') do
+    slim(:'gods/new')
+end
+
+post('/protected/gods/new') do
+    name = params[:name].to_s
+    mythology = params[:mythology]
+    content = params[:content]
+
+    db = SQLite3::Database.new("db/database.db")
+    db.execute("INSERT INTO god (name, mythology_id, content) VALUES (?,?,?)", name, mythology, content)
+    redirect('/protected/gods')
+end
+
+get('/protected/gods/:id') do #har inte gjort än
+    god_id = params[:id].to_i
+    db = connect_database()
+    @result = db.execute("SELECT * FROM god WHERE id = ?",god_id).first
+    @result2 = db.execute("SELECT * FROM god INNER JOIN mythology ON god.mythology_id = mythology.id WHERE id = ?",god_id).first
+    #@artist_result = db.execute("SELECT Name FROM artists WHERE ArtistId IN (SELECT ArtistId FROM albums WHERE AlbumId = ?)",id).first
+    slim(:'gods/show')
+end
