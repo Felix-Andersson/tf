@@ -1,0 +1,13 @@
+== slim(:navbar)
+
+h1 Edit #{@result["name"]}'s page
+
+form action="/protected/gods/#{@result['id']}/update" method="post"
+    input type="text" name="name" value="#{@result['name']}"
+    select name="mythology"
+        option value="1" selected="selected" Greek Mythology
+        //option value="-" -  
+        //option value="*" *  
+    br
+    textarea name="content" id="content_submit" cols="100" rows="50" #{@result['content']}
+    input type="submit" value="Edit!"

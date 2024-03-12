@@ -19,7 +19,6 @@ enable :sessions
 before('/protected/*') do
     if (session[:id] == nil)
         #Användare har inte loggat in och försöker nå en sida förutom '/' och '/showregister'
-        print("REDIRECTED TO LOGIN BECAUSE IT IS PROTECTED!! Here is path: #{request.path_info} -------")
         redirect('/')
     end
 end
@@ -99,11 +98,37 @@ post('/protected/gods/new') do
     redirect('/protected/gods')
 end
 
-get('/protected/gods/:id') do #har inte gjort än
+get('/protected/gods/:id/edit') do
     god_id = params[:id].to_i
     db = connect_database()
     @result = db.execute("SELECT * FROM god WHERE id = ?",god_id).first
-    @result2 = db.execute("SELECT * FROM god INNER JOIN mythology ON god.mythology_id = mythology.id WHERE id = ?",god_id).first
-    #@artist_result = db.execute("SELECT Name FROM artists WHERE ArtistId IN (SELECT ArtistId FROM albums WHERE AlbumId = ?)",id).first
+    @result2 = db.execute("SELECT mythology.name FROM god INNER JOIN mythology ON god.mythology_id = mythology.id WHERE god.id = ?",god_id).first
+    slim(:'gods/edit')
+end
+
+post('/protected/gods/:id/update') do #HAr inte fixat
+    god_id = params[:id].to_i
+    name = params[:name].to_s
+    mythology = params[:mythology]
+    content = params[:content]
+
+    db = SQLite3::Database.new("db/database.db")
+    db.execute("UPDATE god SET name = ?,mythology_id = ?,content = ? WHERE id = ?",name,mythology,content,god_id)
+    redirect('/protected/gods')
+  end
+
+post('/protected/gods/:id/delete') do
+    id = params[:id].to_i
+    db = SQLite3::Database.new("db/database.db")
+    db.execute("DELETE FROM god WHERE id = ?",id)
+    redirect('/protected/gods')
+end
+
+get('/protected/gods/:id') do
+    god_id = params[:id].to_i
+    db = connect_database()
+    @result = db.execute("SELECT * FROM god WHERE id = ?",god_id).first
+    @result2 = db.execute("SELECT mythology.name FROM god INNER JOIN mythology ON god.mythology_id = mythology.id WHERE god.id = ?",god_id).first
     slim(:'gods/show')
 end
+
