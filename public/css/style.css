@@ -2,11 +2,14 @@
     --magic-number:2vw;
 }
 
+* {
+    font-family:Arial, Helvetica, sans-serif;
+}
+
 body{
     margin:0;
     background: rgb(131,58,180);
     background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgb(78, 29, 253) 50%, rgb(69, 225, 252) 100%);
-    font-family:Arial, Helvetica, sans-serif;
     font-weight:500;
     color:white;
     position:relative;
@@ -28,7 +31,10 @@ nav a, nav a:link {
     font-weight:900;
     opacity:0.5;
 }
-  
+
+nav a:hover {
+    color:white;
+}
   
 img {
     position:fixed;
@@ -76,6 +82,32 @@ ul {
     list-style:square;
 }
 
+.notice {
+    background:rgba(110, 10, 10, 0.2);
+    width:60vw;
+    padding:50px;
+    position:fixed;
+    top: 30%;
+    left: calc(50% - 30vw);
+    align-items: center;
+    font-size:4rem;
+}
+
+#login_div {
+    background-image: url("/img/greek_god_wallpaper.jpg");
+    width:100vw;
+    height: 100vh;
+    position:absolute;
+    top: 0;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#login_div h1 {
+    font-size: 4rem;
+}
 
 /*
 
@@ -96,16 +128,6 @@ nav {
 }
 a {
     font-size: 2rem;
-}
-.notice {
-    background:rgba(110, 10, 10, 0.2);
-    width:60vw;
-    padding:50px;
-    position:fixed;
-    top: 30%;
-    left: calc(50% - 30vw);
-    align-items: center;
-    font-size:4rem;
 }
 
 #content_submit {

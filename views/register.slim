@@ -1,8 +1,15 @@
 h1 Register
 
 form action="register" method="post"
-    input type="text" name="username" placeholder="Username"
-    input type="password" name="password" placeholder="Password"
+    input type="text" name="username" placeholder="Username" <em>&nbsp&nbspUsername needs to be between 3-12 characters long</em>
+    br
+    input type="password" name="password" placeholder="Password" <em>&nbsp&nbspPassword needs to be between 3-12 characters long</em>
+    br
+    input type="password_confirm" name="password_confirm" placeholder="Password Again" <em>&nbsp&nbspRepeat password</em>
+    br
+    select name="role"
+        option value="false" selected="selected" User
+        option value="true" Admin
+    br
     input type="submit" value="Register Account"
-
-a href="/" Log in to an existing account
+    a href="/" Log in to an existing account

@@ -1,13 +1,14 @@
 == slim(:navbar)
-a href="/protected/gods/new" New god page
-hr
+-if session[:role] == true
+    a href="/protected/gods/new" New god page
+    hr
 
 h1 These are all the gods 
 ul
     -@result.each do |god|
         li
             a href="/protected/gods/#{god['id']}" #{god["name"]}
-            <a href="/protected/gods/#{god['id']}/edit"> <input type="button" value="Edit"/> </a>
-            /*a id="update" href="/protected/gods/#{god['id']}/edit" Edit*/
-            form action="/protected/gods/#{god['id']}/delete" method="post"
-                input type="submit" value="Delete"
+            -if session[:role] == true
+                <a href="/protected/gods/#{god['id']}/edit"> <input type="button" value="Edit"/> </a>
+                form action="/protected/gods/#{god['id']}/delete" method="post"
+                    input type="submit" value="Delete"

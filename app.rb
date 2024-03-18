@@ -16,6 +16,8 @@ enable :sessions
 #db = connect_database()
 #@result = db.execute("SELECT * FROM element")
 
+#Vad är regular expressions i Validerings pp:n ?? Fråga Emil
+
 before('/protected/*') do
     if (session[:id] == nil)
         #Användare har inte loggat in och försöker nå en sida förutom '/' och '/showregister'
@@ -27,24 +29,25 @@ get('/') do
     slim(:login)
 end
 
-post('/login') do
+post('/login') do       #ENDA SOM ÄR KVAR ÄR ATT FIXA MED TID MELLAN LOGIN (FINNS HÖGST UPP)
     username = params[:username]
     password = params[:password]
     db = connect_database()
     result = db.execute("SELECT * FROM user WHERE username = ?", username).first
     password_digest = result["password"]
     id = result["id"]
+    role = result["role"]
 
     if BCrypt::Password.new(password_digest) == password
         session[:id] = id
         session[:username] = username
-        flash[:notice] = "You have succesfully logged in!"
+        session[:role] = role
         redirect('/protected/home') #Här redirectar vi 
     else
-        "Wrong details entered." #skrivs ut på skärmen
+        flash[:notice] = "Wrong details entered!"
+        redirect('/')
     end
 end
-
 
 get('/showregister') do
     slim(:register)
@@ -53,19 +56,60 @@ end
 post('/register') do
     username = params[:username]
     password = params[:password]
+    password_confirm = params[:password_confirm]
+    role = params[:role]
 
-    #lägg till användare
-    password_digest = BCrypt::Password.create(password)
-    db = SQLite3::Database.new("db/database.db")
-    #Sätt rollen till false eftersom det är vanlig användare och inte admin
-    db.execute("INSERT INTO user (username, password, role) VALUES (?,?,false)", username, password_digest)
-    redirect('/')
+
+    if register_validation(username,password,password_confirm)
+        #Användaren klarade inte valideringen
+        redirect('/showregister')
+    else
+        #lägg till användare
+        password_digest = BCrypt::Password.create(password)
+        db = SQLite3::Database.new("db/database.db")
+        #Sätt rollen till false eftersom det är vanlig användare och inte admin
+        db.execute("INSERT INTO user (username, password, role) VALUES (?,?,?)", username, password_digest, role)
+        redirect('/')
+    end
+end
+
+def register_validation(username, password, password_confirm)
+    #Kolla så att fälten ej är tomma
+    if username.empty? or password.empty? or password_confirm.empty?
+        flash[:notice] = "Fields can not be left empty!"
+        return true
+    end
+
+    #Kolla så att användarnamn inte redan finns i databasen
+    db = connect_database()
+    result = db.execute("SELECT * FROM user WHERE username = ?", username)
+    if not result.empty?
+        flash[:notice] = "Username already exists in database!"
+        return true
+    end
+
+    #Kolla längden på användarnamn samt lösenord
+    if username.length < 3 or username.length > 12       #Användarnamn
+        flash[:notice] = "Username needs to be withing the range!"
+        return true
+    elsif password.length < 3 or password.length > 12    #Lösenord
+        flash[:notice] = "Passwords needs to be withing the range!"
+        return true
+    end
+    
+    #Kolla så att löseorden stämmer överens
+    if password != password_confirm
+        flash[:notice] = "Passwords are not matching!"
+        return true
+    else
+        return false
+    end
 end
 
 get('/logout') do
     flash[:notice] = "You have been logged out!"
     session.clear
-    redirect('/showregister')
+    redirect('/')
 end
 
 get('/protected/home') do
@@ -106,7 +150,7 @@ get('/protected/gods/:id/edit') do
     slim(:'gods/edit')
 end
 
-post('/protected/gods/:id/update') do #HAr inte fixat
+post('/protected/gods/:id/update') do
     god_id = params[:id].to_i
     name = params[:name].to_s
     mythology = params[:mythology]
@@ -115,7 +159,7 @@ post('/protected/gods/:id/update') do #HAr inte fixat
     db = SQLite3::Database.new("db/database.db")
     db.execute("UPDATE god SET name = ?,mythology_id = ?,content = ? WHERE id = ?",name,mythology,content,god_id)
     redirect('/protected/gods')
-  end
+end
 
 post('/protected/gods/:id/delete') do
     id = params[:id].to_i
