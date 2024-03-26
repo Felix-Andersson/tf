@@ -1,4 +1,23 @@
 == slim(:navbar)
 
-h1 The almighty #{@result["name"]} from #{@result2["name"]}
-p Content: #{@result["content"]}
+div class="god_content"
+    h1 #{@result["name"]} from #{@result2["name"]}
+    p #{@result["content"]}
+hr
+
+h2 class="margin" Comments
+form action="/protected/comment/new" class="margin" method="post"
+    input type="hidden" name="god_id" value="#{@result['id']}"
+    textarea name="content" cols="50" rows="8" 
+    input type="submit" value="Publish!"/
+
+-i=0
+-@comment_result.each do |comment|
+    div class="comment"
+        div
+            div class="circular--portrait"
+                img src="/img/kermit.jpg" alt="pfp"
+            h3 #{@comment_result2[i]["username"]}
+        p class="end_of_box" #{comment["date"]}
+        p class="margin" #{comment["content"]}
+        -i+=1

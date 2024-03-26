@@ -1,5 +1,6 @@
 == slim(:navbar)
--if session[:role] == true
+
+- if session[:role] == "true"
     a href="/protected/gods/new" New god page
     hr
 
@@ -8,7 +9,7 @@ ul
     -@result.each do |god|
         li
             a href="/protected/gods/#{god['id']}" #{god["name"]}
-            -if session[:role] == true
+            - if session[:role] == "true"
                 <a href="/protected/gods/#{god['id']}/edit"> <input type="button" value="Edit"/> </a>
                 form action="/protected/gods/#{god['id']}/delete" method="post"
                     input type="submit" value="Delete"
