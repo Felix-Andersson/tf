@@ -8,13 +8,9 @@ require_relative './model.rb'
 
 enable :sessions
 
-#Skriv ut datum genom att:
-#time = Time.new
-#puts "#{time.year}-#{time.month}-#{time.day}"
-#och sätt sedan in det i date i databasen på comment
-
-#db = connect_database()
-#@result = db.execute("SELECT * FROM element")
+#Login Variabel
+$time_login = 0
+$login_array = [] # [ [ip,tid] [ip,tid] ]
 
 #Vad är regular expressions i Validerings pp:n ?? Fråga Emil
 
@@ -31,7 +27,7 @@ get('/') do
     slim(:login)
 end
 
-post('/login') do       #ENDA SOM ÄR KVAR ÄR ATT FIXA MED TID MELLAN LOGIN (FINNS HÖGST UPP)
+post('/login') do
     username = params[:username]
     password = params[:password]
     db = connect_database()
@@ -40,13 +36,42 @@ post('/login') do       #ENDA SOM ÄR KVAR ÄR ATT FIXA MED TID MELLAN LOGIN (FI
     id = result["id"]
     role = result["role"]
 
+    login_timer()
+
     if BCrypt::Password.new(password_digest) == password
         session[:id] = id
         session[:role] = role
+        $time_login = Time.now.to_i
         redirect('/protected/home') #Här redirectar vi 
     else
         flash[:notice] = "Wrong details entered!"
         redirect('/')
+    end
+end
+
+def login_timer()
+    if (not $login_array.empty?) #Om arrayen inte är tom
+        i=0
+        already_exists = false
+        while i<$login_array.length #Loopa igenom alla element i arrayen
+            if $login_array[i][0] = request.ip #Om ip:n finns
+                already_exists = true
+                if $login_array[i][1]+10 > Time.now.to_i    #Om inlogget är inom 10 sekunder av det senaste inlogget
+                    flash[:notice] = "You can't login this often!"
+                    redirect('/')   #Ladda om sidan och gör ingenting
+                end
+                break
+            end
+            i+=1
+
+        end
+        if already_exists   #Om ip:n redan finns i login_array
+            $login_array[i][1] = Time.now.to_i #Lägg in tiden för ip addressen
+        else
+            $login_array << [request.ip, Time.now.to_i] #Lägg in ett nytt element med ip:n
+        end
+    else #Om login_array är tom, lägg in ett nytt element med ip:n
+        $login_array << [request.ip, Time.now.to_i]
     end
 end
 
@@ -175,7 +200,7 @@ get('/protected/gods/:id') do
     @result = db.execute("SELECT * FROM god WHERE id = ?",god_id).first
     @result2 = db.execute("SELECT mythology.name FROM god INNER JOIN mythology ON god.mythology_id = mythology.id WHERE god.id = ?",god_id).first
     @comment_result = db.execute("SELECT * FROM comment WHERE god_id = ?", god_id)
-    @comment_result2 = db.execute("SELECT user.username FROM comment INNER JOIN user ON comment.user_id = user.id WHERE comment.god_id = ?", god_id)
+    @comment_result2 = db.execute("SELECT user.username, user.id FROM comment INNER JOIN user ON comment.user_id = user.id WHERE comment.god_id = ?", god_id)
     slim(:'gods/show')
 end
 
@@ -187,11 +212,12 @@ get('/protected/profile/edit') do
 end
 
 post('/protected/profile/update') do
-    username = params[:username]
-    bio = params[:bio]
+    username = params[:username].to_s
+    bio = params[:bio].to_s
+    user_id = session[:id]
     
     db = SQLite3::Database.new("db/database.db")
-    db.execute("UPDATE user SET username = ?,bio = ?",username,bio)
+    db.execute("UPDATE user SET username = ?,bio = ? WHERE id = ?",username,bio,user_id)
     redirect('/protected/profile/edit')
 end
 
@@ -204,5 +230,29 @@ post('/protected/comment/new') do
 
     db = SQLite3::Database.new("db/database.db")
     db.execute("INSERT INTO comment (user_id, god_id, date, content) VALUES (?,?,?,?)", user_id, god_id, date, content)
+    redirect("/protected/gods/#{god_id}")
+end
+
+get('/protected/comment/:id/edit') do
+    comment_id = params[:id].to_i
+    db = connect_database()
+    @result = db.execute("SELECT * FROM comment WHERE id = ?",comment_id).first
+    slim(:'comment/edit')
+end
+
+post('/protected/comment/:id/update') do
+    comment_id = params[:id].to_i
+    content = params[:content]
+
+    db = SQLite3::Database.new("db/database.db")
+    db.execute("UPDATE comment SET content = ? WHERE id = ?",content,comment_id)
+    redirect('/protected/gods')
+end
+
+post('/protected/comment/:id/delete') do
+    id = params[:id].to_i
+    god_id = params[:god_id].to_i
+    db = SQLite3::Database.new("db/database.db")
+    db.execute("DELETE FROM comment WHERE id = ?",id)
     redirect("/protected/gods/#{god_id}")
 end

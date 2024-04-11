@@ -4,6 +4,14 @@
 
 * {
     font-family:Arial, Helvetica, sans-serif;
+    font-size: 1.05em;
+    -ms-overflow-style: none;  /* IE och Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* göm scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+    display: none;
 }
 
 .margin {
@@ -14,9 +22,10 @@
 body{
     margin:0;
     background: rgb(131,58,180);
-    background: linear-gradient(90deg, rgb(184, 91, 68) 0%, rgb(253, 170, 69) 40%, rgb(245, 147, 56) 100%);
+    background: linear-gradient(90deg, rgb(184, 91, 68) 0%, rgb(253, 170, 69) 50%, rgb(245, 147, 56) 100%);
     font-weight:500;
     color:white;
+    text-shadow: -1px -1px 0 rgb(174, 102, 8), 1px -1px 0 rgb(117, 68, 3), -1px 1px 0 rgb(117, 68, 3), 1px 1px 0 black;
     position:relative;
 }
   
@@ -27,23 +36,29 @@ nav {
     justify-content: space-around;
     align-items:center;
 }
-  
+
 nav a, nav a:link {
     color:black;
     text-decoration:none;
     text-transform:uppercase;
-    font-size:1.2em;
     font-weight:900;
     opacity:0.5;
+    text-shadow: none;
 }
 
 nav a:hover {
     color:white;
+    opacity:0.8;
 }
   
 h1 {
     margin:var(--magic-number);
     text-transform: capitalize;
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.3em;
 }
   
 hr {
@@ -53,21 +68,23 @@ hr {
 }
 
 a, form {
-    display:inline-block;
-    margin:10px;
+    display: inline-block;
 }
 
 a {
-    color: rgb(204, 0, 0);
+    color: rgb(255, 166, 50);
+    margin:10px;
+    text-shadow: -1px -1px 0 rgb(174, 102, 8), 1px -1px 0 rgb(117, 68, 3), -1px 1px 0 rgb(117, 68, 3), 1px 1px 0 black;
 }
 
 input[type=button], input[type=submit], input[type=reset] {
-    background:rgba(91, 48, 48, 0.3);
-    border-color: rgb(156, 25, 40);
+    background:rgba(168, 145, 111, 0.1);
+    border-color: rgb(255, 156, 27);
     text-decoration: none;
-    color: rgb(204, 0, 0);
+    color: rgb(255, 166, 50);
     cursor: pointer;
     font-weight: 500;
+    text-shadow: -1px -1px 0 rgb(174, 102, 8), 1px -1px 0 rgb(117, 68, 3), -1px 1px 0 rgb(117, 68, 3), 1px 1px 0 black;
 }
 
 #update {
@@ -108,7 +125,28 @@ ul {
     align-items: center;
 }
 
-#login_div h1 {
+#register_div {
+    background-image: url("/img/greek_god_wallpaper_2.png");
+    background-size:cover;
+    width:100vw;
+    height: 100vh;
+    position:absolute;
+    top: 0;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#login_div div, #register_div div {
+    background:rgba(233, 200, 143, 0.5);
+    border: 2px solid white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+
+#login_div div h1, #register_div div h1 {
     font-size: 4rem;
 }
 
@@ -176,24 +214,48 @@ p {
     right: 1vw;
 }
 
-/*
-
-body {
-    background-color:rgb(170, 0, 0);
-}
-h1 {
-    color: aliceblue;
-}
-p {
-    color: white;
-}
-nav {
-    justify-content: space-around;
-    flex-direction: row;
+.dot_container {
+    display: grid;
+    place-items: center;
+    justify-content: center;
     align-items: center;
-    width: 100%;
 }
-a {
-    font-size: 2rem;
+
+.dot_container div {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+    cursor: pointer;
 }
-*/
+
+.dot_container div div{
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: white;
+    margin-top: 1px;
+    border: solid black 1px;
+}
+
+.settings_window {
+    display: flex;
+    position: absolute;
+    width: 106px;
+    height: 135px;
+    background:rgb(224,156,92);
+    border: solid white 1px;
+}
+
+.settings_window input[type=submit], .settings_window a input[type=button] {
+    border-color: white;
+    color: white;
+    margin: 10px 0 0 10px;
+}
+
+.dot_container article {
+    display: none;
+}
+
+#special_link {
+    margin: 0;
+}

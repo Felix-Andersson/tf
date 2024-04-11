@@ -18,6 +18,20 @@ form action="/protected/comment/new" class="margin" method="post"
             div class="circular--portrait"
                 img src="/img/kermit.jpg" alt="pfp"
             h3 #{@comment_result2[i]["username"]}
-        p class="end_of_box" #{comment["date"]}
+        div class="end_of_box"
+            p #{comment["date"]}
+            -if session[:role] == "true" or @comment_result2[i]["id"].to_i == session[:id]
+                div class="dot_container"
+                    div onclick="commentClick(#{i})"
+                        div 
+                        div 
+                        div
+                    article id="comment_#{i}"
+                        form action="/protected/comment/#{comment['id']}/delete" method="post"
+                            input type="hidden" name="god_id" value="#{@result['id']}"
+                            input type="submit" value="Delete"
+                        a href="/protected/comment/#{comment['id']}/edit" id="special_link"
+                            input type="button" value="Edit"
+                        input type="submit" value="Close" onclick="hideComment(#{i})"
         p class="margin" #{comment["content"]}
         -i+=1

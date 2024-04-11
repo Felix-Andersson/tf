@@ -4,10 +4,10 @@ html lang="en"
         meta charset="UTF-8"/
         meta name="viewport" content="width=device-width, initial-scale=1.0"/
         link rel="stylesheet" href="/css/style.css?ver=321"/
-        title Lakkupipu
-    body
-        - if flash[:notice]
+        title GUDAR
+    body onclick="hideWindows()"
+        -if flash[:notice]
            p.notice = flash[:notice]
         ==yield
 
-        script src="js/script.js"
+        script src="/js/script.js"
