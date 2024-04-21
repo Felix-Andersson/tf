@@ -19,7 +19,7 @@ form action="/protected/comment/new" class="margin" method="post"
                 img src="/img/kermit.jpg" alt="pfp"
             h3 #{@comment_result2[i]["username"]}
         div class="end_of_box"
-            p #{comment["date"]}
+            p = comment["date"]
             -if session[:role] == "true" or @comment_result2[i]["id"].to_i == session[:id]
                 div class="dot_container"
                     div onclick="commentClick(#{i})"

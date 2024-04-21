@@ -138,6 +138,17 @@ ul {
     align-items: center;
 }
 
+#home_div {
+    width:100vw;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 #login_div div, #register_div div {
     background:rgba(233, 200, 143, 0.5);
     border: 2px solid white;
@@ -258,4 +269,27 @@ p {
 
 #special_link {
     margin: 0;
+}
+
+#list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 12.5em;
+    max-height: 290px;
+    overflow-y: auto;
+    text-align: center;
+    background:rgba(233, 200, 143, 0.5);
+    border: 1px solid white;
+}
+
+#list a {
+    text-decoration: none;
+    color: white;
+    border: 1px white;
+    border-style: none none solid none;
+}
+
+.list_toggle {
+    display: none;
 }

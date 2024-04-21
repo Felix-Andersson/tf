@@ -30,8 +30,7 @@ end
 post('/login') do
     username = params[:username]
     password = params[:password]
-    db = connect_database()
-    result = db.execute("SELECT * FROM user WHERE username = ?", username).first
+    result = select_db("user", "username", username)
     password_digest = result["password"]
     id = result["id"]
     role = result["role"]
@@ -107,8 +106,7 @@ def register_validation(username, password, password_confirm)
     end
 
     #Kolla så att användarnamn inte redan finns i databasen
-    db = connect_database()
-    result = db.execute("SELECT * FROM user WHERE username = ?", username)
+    result = select_db("user", "username", username, false)
     if not result.empty?
         flash[:notice] = "Username already exists in database!"
         return true
@@ -139,18 +137,17 @@ get('/logout') do
 end
 
 get('/protected/home') do
+    @result = select_all_db("god")
     slim(:home)
 end
 
 get('/protected/elements') do
-    db = connect_database()
-    @result = db.execute("SELECT * FROM element")
+    @result = select_all_db("element")
     slim(:elements)
 end
 
 get('/protected/gods') do
-    db = connect_database()
-    @result = db.execute("SELECT * FROM god")
+    @result = select_all_db("god")
     slim(:'gods/index')
 end
 
@@ -171,7 +168,8 @@ end
 get('/protected/gods/:id/edit') do
     god_id = params[:id].to_i
     db = connect_database()
-    @result = db.execute("SELECT * FROM god WHERE id = ?",god_id).first
+    #@result = db.execute("SELECT * FROM god WHERE id = ?",god_id).first
+    @result = select_db("god", "id", god_id)
     @result2 = db.execute("SELECT mythology.name FROM god INNER JOIN mythology ON god.mythology_id = mythology.id WHERE god.id = ?",god_id).first
     slim(:'gods/edit')
 end
@@ -197,17 +195,16 @@ end
 get('/protected/gods/:id') do
     god_id = params[:id].to_i
     db = connect_database()
-    @result = db.execute("SELECT * FROM god WHERE id = ?",god_id).first
+    @result = select_db("god", "id", god_id)
     @result2 = db.execute("SELECT mythology.name FROM god INNER JOIN mythology ON god.mythology_id = mythology.id WHERE god.id = ?",god_id).first
-    @comment_result = db.execute("SELECT * FROM comment WHERE god_id = ?", god_id)
+    @comment_result = select_db("comment", "god_id", god_id, false)
     @comment_result2 = db.execute("SELECT user.username, user.id FROM comment INNER JOIN user ON comment.user_id = user.id WHERE comment.god_id = ?", god_id)
     slim(:'gods/show')
 end
 
 get('/protected/profile/edit') do
     user_id = session[:id]
-    db = connect_database()
-    @result = db.execute("SELECT * FROM user WHERE id = ?", user_id).first
+    @result = select_db("user", "id", user_id)
     slim(:profile)
 end
 
@@ -235,8 +232,7 @@ end
 
 get('/protected/comment/:id/edit') do
     comment_id = params[:id].to_i
-    db = connect_database()
-    @result = db.execute("SELECT * FROM comment WHERE id = ?",comment_id).first
+    @result = select_db("comment", "id", comment_id)
     slim(:'comment/edit')
 end
 

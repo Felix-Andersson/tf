@@ -1,3 +1,11 @@
 == slim(:navbar)
 
-h1 Welcome to Home #{session[:username]}
+div id="home_div"
+
+    h1 Welcome to Home #{session[:username]}
+
+    input type="text" name="search" id="searchbar" onkeyup="search_type()" placeholder="Search for god..."
+    ul id="list" class="list_toggle" 
+        -@result.each do |god|
+            li class="gods"
+                a href="/protected/gods/#{god['id']}" #{god["name"]}
