@@ -5,7 +5,7 @@ h1 id="profile_title" Profile
 div class="circular--portrait"
     img src="/img/kermit.jpg" alt="pfp"/
 /*Lägg in en form med textfield för bio och kunna ändra användarnamn kolla i edit.slim*/
-form action="/protected/profile/update" method="post"
+form action="/protected/profiles/update" method="post"
     p Username: 
     input type="text" name="username" value="#{@result['username']}"
     br

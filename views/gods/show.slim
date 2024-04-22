@@ -6,7 +6,7 @@ div class="god_content"
 hr
 
 h2 class="margin" Comments
-form action="/protected/comment/new" class="margin" method="post"
+form action="/protected/comments" class="margin" method="post"
     input type="hidden" name="god_id" value="#{@result['id']}"
     textarea name="content" cols="50" rows="8" 
     input type="submit" value="Publish!"/
@@ -27,10 +27,10 @@ form action="/protected/comment/new" class="margin" method="post"
                         div 
                         div
                     article id="comment_#{i}"
-                        form action="/protected/comment/#{comment['id']}/delete" method="post"
+                        form action="/protected/comments/#{comment['id']}/delete" method="post"
                             input type="hidden" name="god_id" value="#{@result['id']}"
                             input type="submit" value="Delete"
-                        a href="/protected/comment/#{comment['id']}/edit" id="special_link"
+                        a href="/protected/comments/#{comment['id']}/edit" id="special_link"
                             input type="button" value="Edit"
                         input type="submit" value="Close" onclick="hideComment(#{i})"
         p class="margin" #{comment["content"]}
