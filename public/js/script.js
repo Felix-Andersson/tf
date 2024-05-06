@@ -33,3 +33,29 @@ function search_type() {
         }
     }
 }
+
+function addClick() {
+    var resultJSON = document.getElementById('addElement').getAttribute('data-result');
+    var result = JSON.parse(resultJSON);
+
+    var element_container = document.getElementById('elementContainer');
+    var element_index = element_container.childElementCount + 1;
+
+    var select = document.createElement('select');
+    select.name = `element_${element_index}`;
+
+    result.forEach(function(element) {
+        var opt = document.createElement('option');
+        opt.value = element['id'];
+        opt.innerHTML = element['property'];
+        select.appendChild(opt);
+    });
+
+    element_container.appendChild(select);
+}
+
+
+function removeClick() {
+    var element_container = document.getElementById('elementContainer');
+    element_container.lastChild.remove()
+}

@@ -8,5 +8,13 @@ form action="/protected/gods" method="post"
         //option value="-" -  
         //option value="*" *  
     br
+    div#elementContainer
+        select name="element_1"
+            -@result.each do |element|
+                option value="#{element['id']}" #{element['property']} 
+    br
+    button type="button" data-result="#{JSON.generate(@result)}" id="addElement" onclick="addClick()" Add Element
+    button type="button" id="removeElement" onclick="removeClick()" Remove Element
+    br
     textarea name="content" cols="100" rows="50" 
     input type="submit" value="Create!"

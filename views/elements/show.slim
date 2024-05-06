@@ -1,0 +1,6 @@
+== slim(:navbar)
+
+ul
+    -@result.each do |god|
+        li
+            a href="/protected/gods/#{god['id']}" #{god["name"]}
