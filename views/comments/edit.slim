@@ -2,6 +2,6 @@
 
 h1 Edit comment
 
-form action="/protected/comment/#{@result['id']}/update" method="post"
+form action="/protected/comments/#{@result['id']}/update" method="post"
     textarea name="content" cols="20" rows="10" #{@result['content']}
     input type="submit" value="Edit!"
